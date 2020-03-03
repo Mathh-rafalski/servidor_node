@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //rotas
-app.get('/contas', function (req, res) {
+app.get('/tarefas', function (req, res) {
     connection.query('select descricao,data_hora from tarefas',
         function (error, results, fields) {
             if (error)
@@ -43,7 +43,7 @@ app.get('/gjson', function (req, res) {
     let retorno = { ola: "Mundo" }
     res.send(retorno)
 });
-app.post('/pjson', function (req, res) {
+app.post('/addCompromisso', function (req, res) {
     console.log(req.body.dataHora);
     var sql = "INSERT INTO `tarefas` (`descricao`,`data_hora`) VALUES ('" + req.body.descricao + "', '" + req.body.dataHora + "')";
     connection.query(sql, function(err, result)  {
