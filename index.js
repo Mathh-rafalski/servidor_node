@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const mysql = require('mysql');
 const moment = require('moment');
 const socket = require('socket.io');
+const cors = require('cors');
 const connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
@@ -19,6 +20,7 @@ connection.connect(function (err) {
     }
     console.log('Banco conectado')
 });
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -45,7 +47,7 @@ app.get('/gjson', function (req, res) {
 });
 app.post('/addCompromisso', function (req, res) {
     console.log(req.body.dataHora);
-    var sql = "INSERT INTO `tarefas` (`descricao`,`data_hora`) VALUES ('" + req.body.descricao + "', '" + req.body.dataHora + "')";
+    var sql = "INSERT INTO `tarefas` (`descricao`,`data_hora`) VALUES ('" + req.body.descricao + "', '" +req.body.data_hora + "')";
     connection.query(sql, function(err, result)  {
     res.send(req.body.descricao)
 });
@@ -55,6 +57,6 @@ app.get('/', function (req, res) {
     res.send('Hello')
 });
 
-app.listen(80, function () {
+app.listen(3000, function () {
     console.log('Example app listening on port 3000');
 });
