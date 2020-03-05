@@ -45,6 +45,22 @@ app.get('/gjson', function (req, res) {
     let retorno = { ola: "Mundo" }
     res.send(retorno)
 });
+app.get('/mesAtual', function(req, res) {
+    connection.query('select descricao,data_hora from tarefas where extract(month from data_hora) = extract(month from current_date) ',
+        function (error, results, fields) {
+            if (error)
+                res.json(error);
+            else {
+                results.forEach(element => {
+                    element.data_hora = moment(element.data_hora).format('DD/MM/YYYY HH:mm')
+                });
+                res.json(results);
+                //connection.end();
+            }
+                
+            console.log("executed");
+});
+});
 app.post('/addCompromisso', function (req, res) {
     console.log(req.body.dataHora);
     var sql = "INSERT INTO `tarefas` (`descricao`,`data_hora`) VALUES ('" + req.body.descricao + "', '" +req.body.data_hora + "')";
