@@ -5,6 +5,7 @@ const mysql = require('mysql');
 const moment = require('moment');
 const socket = require('socket.io');
 const cors = require('cors');
+const path = require('path')
 const connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
@@ -23,7 +24,11 @@ connection.connect(function (err) {
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use('/cad', function (req, res) {
+    res.sendFile(path.join('C:','Users','Matheus','Desktop','a','index.html'));
+    //C:\Users\Matheus\Desktop\a
+})
+var server = app.listen(80)
 //rotas
 app.get('/tarefas', function (req, res) {
     connection.query('select descricao,data_hora from tarefas',
@@ -71,8 +76,4 @@ app.post('/addCompromisso', function (req, res) {
 
 app.get('/', function (req, res) {
     res.send('Hello')
-});
-
-app.listen(3000, function () {
-    console.log('Example app listening on port 3000');
 });
