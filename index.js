@@ -6,6 +6,7 @@ const moment = require('moment');
 const socket = require('socket.io');
 const cors = require('cors');
 const path = require('path')
+const router = express.Router()
 const connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
@@ -31,7 +32,8 @@ app.use('/cad', function (req, res) {
 var server = app.listen(80)
 //rotas
 app.get('/tarefas', function (req, res) {
-    connection.query('select descricao,data_hora from tarefas',
+    let sql = 'select descricao,data_hora from tarefas where data_hora'
+    connection.query(sql,
         function (error, results, fields) {
             if (error)
                 res.json(error);
@@ -68,7 +70,7 @@ app.get('/mesAtual', function(req, res) {
 });
 app.post('/addCompromisso', function (req, res) {
     console.log(req.body.dataHora);
-    var sql = "INSERT INTO `tarefas` (`descricao`,`data_hora`) VALUES ('" + req.body.descricao + "', '" +req.body.data_hora + "')";
+    let sql = "INSERT INTO `tarefas` (`descricao`,`data_hora`) VALUES ('" + req.body.descricao + "', '" +req.body.data_hora + "')";
     connection.query(sql, function(err, result)  {
     res.send(req.body.descricao)
 });
@@ -76,4 +78,22 @@ app.post('/addCompromisso', function (req, res) {
 
 app.get('/', function (req, res) {
     res.send('Hello')
+});
+app.get('/test/:dataBusca', function (req, res) {
+    console.log(req.params.dataBusca)
+    let sql = 'select descricao,data_hora from tarefas where data_hora like "%'+""+'%"'
+    connection.query(sql,
+        function (error, results, fields) {
+            if (error)
+                res.json(error);
+            else {
+                results.forEach(element => {
+                    element.data_hora = moment(element.data_hora).format('DD/MM/YYYY HH:mm')
+                });
+                res.json(results);
+                //connection.end();
+            }
+                
+            console.log("executed");
+        });
 });
